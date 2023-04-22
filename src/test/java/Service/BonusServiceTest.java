@@ -11,16 +11,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class BonusServiceTest {
 
     @Test
-    void bonusDeveriaSerZeroParaFuncionarioComSalarioMuitoAlto(){
+    void bonusDeveriaSerZeroParaFuncionarioComSalarioMuitoAlto() {
         BonusService service = new BonusService();
-        BigDecimal bonus = service.calcularBonus(new Funcionario(
-                "Savio", LocalDate.now(), new BigDecimal("15000")));
-
-        assertEquals(BigDecimal.ZERO, bonus);
+        assertThrows(IllegalArgumentException.class,
+                () -> service.calcularBonus(new Funcionario(
+                        "Savio", LocalDate.now(), new BigDecimal("15000"))));
     }
 
     @Test
-    void bonusDeveriaSerDezPorcentoDoSalario(){
+    void bonusDeveriaSerZeroParaFuncionarioComSalarioMuitoAltoTry() {
+        BonusService service = new BonusService();
+        try {
+            service.calcularBonus(new Funcionario(
+                    "Savio", LocalDate.now(), new BigDecimal("15000")));
+            fail("Nao deu a IllegalArgunmentExceptio.");
+        } catch (IllegalArgumentException e) {
+            assertEquals(e.getMessage(), "Funcionario com salario maior que R$10000.");
+        }
+    }
+
+    @Test
+    void bonusDeveriaSerDezPorcentoDoSalario() {
         BonusService service = new BonusService();
         BigDecimal bonus = service.calcularBonus(new Funcionario(
                 "Savio", LocalDate.now(), new BigDecimal("1500")));
